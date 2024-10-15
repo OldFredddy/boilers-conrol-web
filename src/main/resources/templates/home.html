@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+</head>
+<body>
+<div th:utext="${htmlContent}"></div>
+
+<form th:action="@{/updateHomePage}" method="post">
+    <textarea name="htmlContent" rows="20" cols="80" th:text="${htmlContent}"></textarea>
+    <button type="submit">Update</button>
+</form>
+
+<form th:action="@{/changeLoginPath}" method="post">
+    <label for="newPath">New Login Path:</label>
+    <input type="text" id="newPath" name="newPath" required>
+    <button type="submit">Change Path</button>
+</form>
+</body>
+</html>

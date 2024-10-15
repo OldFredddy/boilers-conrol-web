@@ -1,0 +1,8 @@
+
+   adb devices
+   adb tcpip 5555
+   adb shell ip -f inet addr show wlan0
+ например, `192.168.0.3`.
+   adb connect 192.168.0.3:5555
+   adb shell pm grant com.oldfr.system_bridge android.permission.WRITE_EXTERNAL_STORAGE
+   adb shell dumpsys package com.oldfr.system_bridge | findstr WRITE_EXTERNAL_STORAGE
