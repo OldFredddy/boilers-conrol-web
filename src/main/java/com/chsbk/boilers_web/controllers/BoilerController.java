@@ -1,8 +1,8 @@
 // src/main/java/com/example/demo/controller/BoilerController.java
-package com.chsbk.RatServer.controllers;
+package com.chsbk.boilers_web.controllers;
 
 
-import com.chsbk.RatServer.entities.Boiler;
+import com.chsbk.boilers_web.entities.Boiler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;

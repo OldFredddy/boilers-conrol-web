@@ -1,4 +1,4 @@
-package com.chsbk.RatServer.configs;
+package com.chsbk.boilers_web.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

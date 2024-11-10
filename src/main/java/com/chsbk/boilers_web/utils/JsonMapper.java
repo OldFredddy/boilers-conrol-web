@@ -1,4 +1,4 @@
-package com.chsbk.RatServer.utils;
+package com.chsbk.boilers_web.utils;
 
 public class JsonMapper {
 

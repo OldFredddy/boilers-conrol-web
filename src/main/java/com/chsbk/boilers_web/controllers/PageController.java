@@ -1,9 +1,8 @@
-package com.chsbk.RatServer.controllers;
+package com.chsbk.boilers_web.controllers;
 
-import com.chsbk.RatServer.configs.SecurityConfig;
+import com.chsbk.boilers_web.configs.SecurityConfig;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller

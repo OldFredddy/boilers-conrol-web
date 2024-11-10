@@ -1,4 +1,4 @@
-package com.chsbk.RatServer.controllers;
+package com.chsbk.boilers_web.controllers;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;

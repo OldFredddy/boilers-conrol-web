@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.chsbk</groupId>
-	<artifactId>RatServer</artifactId>
+	<artifactId>boilers-web-control</artifactId>
 	<version>1.0.8</version>
-	<name>RatServer</name>
+	<name>boilers-web-control</name>
 	<description>Web service</description>
 	<properties>
 		<java.version>21</java.version>

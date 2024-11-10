@@ -1,4 +1,4 @@
-package com.chsbk.RatServer.repository;
+package com.chsbk.boilers_web.repository;
 
 import com.boilersserver.BoilersControlServer.entities.Boiler;
 import com.boilersserver.BoilersControlServer.entities.BoilerLog;
