@@ -8,21 +8,10 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 public class PageController {
 
-    private String loginPath = SecurityConfig.getLoginPath();
-
-
-
-    @RequestMapping(value = "/{path}")
-    public String login(@PathVariable String path, HttpServletRequest request) {
-        if (request.getRequestURI().equals(loginPath)) {
-            return "auth_page";
-        } else {
-            return "redirect:/login";
-        }
+    @GetMapping("/login")
+    public String showLoginPage() {
+        return "auth_page";
     }
 
-
-
-
-
 }
+

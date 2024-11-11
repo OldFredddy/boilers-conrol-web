@@ -20,6 +20,7 @@ public class Boiler {
     @Setter private long version;
     @Setter private long lastUpdated;
     @Setter private long lastValueChangedTime;
+    @Setter private String boilerIcon;
     public void setIsOk(int isOk) {
         this.isOk = isOk;
     }

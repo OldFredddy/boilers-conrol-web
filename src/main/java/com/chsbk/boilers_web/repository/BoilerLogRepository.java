@@ -1,7 +1,7 @@
 package com.chsbk.boilers_web.repository;
 
-import com.boilersserver.BoilersControlServer.entities.Boiler;
-import com.boilersserver.BoilersControlServer.entities.BoilerLog;
+import com.chsbk.boilers_web.entities.Boiler;
+import com.chsbk.boilers_web.entities.BoilerLog;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface BoilerLogRepository extends MongoRepository<BoilerLog, String> {

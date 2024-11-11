@@ -8,14 +8,12 @@
 <body>
 <h1>Панель управления котельными</h1>
 <div th:each="boiler : ${boilers}" class="boiler">
-    <h2 th:text="${boiler.boilerLabel}">Название котельной</h2>
+    <h2 th:text="${boiler.id}">Название котельной</h2>
     <p>Температура подачи: <span th:text="${boiler.tPod}">N/A</span> °C</p>
     <p>Давление подачи: <span th:text="${boiler.pPod}">N/A</span> МПа</p>
     <p>Температура улицы: <span th:text="${boiler.tUlica}">N/A</span> °C</p>
     <p>Плановая температура: <span th:text="${boiler.tPlan}">N/A</span> °C</p>
     <p>Температура аварии: <span th:text="${boiler.tAlarm}">N/A</span> °C</p>
-    <p>Статус: <span th:text="${boiler.ok == 0 ? 'Ожидание' : (boiler.ok == 1 ? 'Хорошо' : 'Ошибка')}">Статус</span></p>
-
     <!-- Форма для изменения TPlan -->
     <form th:action="@{/boiler/updateTPlan}" method="post">
         <input type="hidden" name="id" th:value="${boiler.id}" />

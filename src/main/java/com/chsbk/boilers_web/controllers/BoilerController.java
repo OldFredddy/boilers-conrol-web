@@ -65,14 +65,13 @@ public class BoilerController {
         };
         for (int i = 0; i < boilerNames.length; i++) {
             Boiler boiler = new Boiler();
-            boiler.setId((long) (i + 1));
-            boiler.setBoilerLabel(boilerNames[i]);
+            boiler.setId((i + 1));
+            boiler.setBoilerIcon("/boilers_images/boiler_icon_" + (i + 1) + ".png");
             boiler.setTPod("***");
             boiler.setPPod("***");
             boiler.setTUlica(String.valueOf(i - 5));
             boiler.setTPlan("***");
             boiler.setTAlarm("Нет связи!");
-            boiler.setOk(1);
             boilers.add(boiler);
         }
         return boilers;

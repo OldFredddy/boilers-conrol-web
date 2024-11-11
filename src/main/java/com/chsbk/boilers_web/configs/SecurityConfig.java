@@ -34,29 +34,22 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/css/**", "/js/**", "/images/**", "/login").permitAll()
-                        .requestMatchers(loginPath).permitAll()
                         .requestMatchers("/devices/init", "/devices/update", "/files/download/", "/files/upload").permitAll()
-                        .requestMatchers("/devices/**").permitAll()  // Разрешаем доступ к эндпоинту /getstates/{name}
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
-                        .loginPage("/login") // фейковая страница
-                        .loginProcessingUrl(loginPath)
-                        .defaultSuccessUrl("/devices", true) // Указываем страницу для перенаправления после успешного логина
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login")
+                        .defaultSuccessUrl("/devices_nav", true)
                         .permitAll()
                 )
-                .logout(LogoutConfigurer::permitAll
-                );
+                .logout(LogoutConfigurer::permitAll);
         return http.build();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }
-
-    public static void setLoginPath(String newPath) {
-        loginPath = newPath;
     }
 
     public static String getLoginPath() {
