@@ -1,3 +1,4 @@
+<!-- src/main/resources/templates/index.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -7,32 +8,68 @@
 </head>
 <body>
 <h1>Панель управления котельными</h1>
-<div th:each="boiler : ${boilers}" class="boiler">
-    <h2 th:text="${boiler.id}">Название котельной</h2>
-    <p>Температура подачи: <span th:text="${boiler.tPod}">N/A</span> °C</p>
-    <p>Давление подачи: <span th:text="${boiler.pPod}">N/A</span> МПа</p>
-    <p>Температура улицы: <span th:text="${boiler.tUlica}">N/A</span> °C</p>
-    <p>Плановая температура: <span th:text="${boiler.tPlan}">N/A</span> °C</p>
-    <p>Температура аварии: <span th:text="${boiler.tAlarm}">N/A</span> °C</p>
+<div th:each="boiler : ${boilers}" class="boiler" th:id="'boiler-' + ${boiler.id}">
+    <h2 th:text="${boiler.name}">Название котельной</h2>
 
-    <!-- Display boiler image if available -->
-    <div th:if="${boiler.boilerIcon}">
-        <img th:src="@{${boiler.boilerIcon}}" alt="Boiler Image" style="width:100%; border-radius:5px; margin-top:15px;">
-    </div>
+    <!-- Таблица с данными -->
+    <table>
+        <tr>
+            <th>Температура подачи</th>
+            <td><span th:id="'tPod-' + ${boiler.id}" th:text="${boiler.tPod}">N/A</span> °C</td>
+        </tr>
+        <tr>
+            <th>Давление подачи</th>
+            <td><span th:id="'pPod-' + ${boiler.id}" th:text="${boiler.pPod}">N/A</span> МПа</td>
+        </tr>
+        <tr>
+            <th>Температура улицы</th>
+            <td><span th:id="'tUlica-' + ${boiler.id}" th:text="${boiler.tUlica}">N/A</span> °C</td>
+        </tr>
+        <tr>
+            <th>Плановая температура</th>
+            <td><span th:id="'tPlan-' + ${boiler.id}" th:text="${boiler.tPlan}">N/A</span> °C</td>
+        </tr>
+        <tr>
+            <th>Температура аварии</th>
+            <td><span th:id="'tAlarm-' + ${boiler.id}" th:text="${boiler.tAlarm}">N/A</span> °C</td>
+        </tr>
+    </table>
 
-    <!-- Form for updating TPlan -->
+    <!-- Форма для изменения TPlan -->
     <form th:action="@{/boiler/updateTPlan}" method="post">
         <input type="hidden" name="id" th:value="${boiler.id}" />
         <button type="submit" name="adjustment" value="-3">Уменьшить TPlan</button>
         <button type="submit" name="adjustment" value="3">Увеличить TPlan</button>
     </form>
 
-    <!-- Form for updating TAlarm -->
+    <!-- Форма для изменения TAlarm -->
     <form th:action="@{/boiler/updateTAlarm}" method="post">
         <input type="hidden" name="id" th:value="${boiler.id}" />
         <button type="submit" name="adjustment" value="-3">Уменьшить TAlarm</button>
         <button type="submit" name="adjustment" value="3">Увеличить TAlarm</button>
     </form>
 </div>
+
+<!-- JavaScript для обновления данных -->
+<script>
+    function updateBoilerData() {
+        fetch('/api/boilers')
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(boiler => {
+                    document.getElementById('tPod-' + boiler.id).innerText = boiler.tPod;
+                    document.getElementById('pPod-' + boiler.id).innerText = boiler.pPod;
+                    document.getElementById('tUlica-' + boiler.id).innerText = boiler.tUlica;
+                    document.getElementById('tPlan-' + boiler.id).innerText = boiler.tPlan;
+                    document.getElementById('tAlarm-' + boiler.id).innerText = boiler.tAlarm;
+                    // Обновите другие элементы по мере необходимости
+                });
+            })
+            .catch(error => console.error('Ошибка при обновлении данных:', error));
+    }
+
+    // Запускаем обновление каждые 3 секунды
+    setInterval(updateBoilerData, 3000);
+</script>
 </body>
 </html>

@@ -1,31 +1,64 @@
 package com.chsbk.boilers_web.entities;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class Boiler {
+    @JsonProperty("isOk")
     private int isOk;  // 0-waiting, 1 - good, 2 - error
-    @Setter private String tPod;
-    @Setter private String pPod;
-    @Setter private String tUlica;
-    @Setter private String tPlan;
-    @Setter private String tAlarm;
-    @Setter private int imageResId;
-    @Setter private String pPodLowFixed;
-    @Setter private String pPodHighFixed;
-    @Setter private String tPodFixed;
-    @Setter private Integer id;
-    @Setter private long version;
-    @Setter private long lastUpdated;
-    @Setter private long lastValueChangedTime;
-    @Setter private String boilerIcon;
+
+    @JsonProperty("tPod")
+    private String tPod;
+
+    @JsonProperty("pPod")
+    private String pPod;
+
+    @JsonProperty("tUlica")
+    private String tUlica;
+
+    @JsonProperty("tPlan")
+    private String tPlan;
+
+    @JsonProperty("tAlarm")
+    private String tAlarm;
+
+    @JsonProperty("imageResId")
+    private int imageResId;
+
+    @JsonProperty("pPodLowFixed")
+    private String pPodLowFixed;
+
+    @JsonProperty("pPodHighFixed")
+    private String pPodHighFixed;
+
+    @JsonProperty("tPodFixed")
+    private String tPodFixed;
+
+    @JsonProperty("id")
+    private Integer id;
+
+    @JsonProperty("version")
+    private long version;
+
+    @JsonProperty("lastUpdated")
+    private long lastUpdated;
+
+    @JsonProperty("lastValueChangedTime")
+    private long lastValueChangedTime;
+
+    @JsonProperty("boilerIcon")
+    private String boilerIcon;
+
+    @JsonProperty("boilerIcon")
+    private String name;
     public void setIsOk(int isOk) {
         this.isOk = isOk;
     }
 
-    public void setIsOk(int isOk, long newVersion) {   //0-waiting 1 - good 2 - error
+    public void setIsOk(int isOk, long newVersion) {   // 0-waiting, 1 - good, 2 - error
         if (newVersion > this.version) {
             this.isOk = isOk;
             this.version = newVersion;

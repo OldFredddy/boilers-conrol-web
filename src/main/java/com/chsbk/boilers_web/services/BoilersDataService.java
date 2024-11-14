@@ -48,6 +48,7 @@ public class BoilersDataService {
             boiler.setPPodHighFixed("-1");
             boiler.setPPodLowFixed("-1");
             boiler.setTPodFixed("-1");
+            boiler.setName("no data");
             boilers.add(boiler);
         }
 
@@ -100,6 +101,52 @@ public class BoilersDataService {
             oldBoiler.setId(newBoiler.getId());
             oldBoiler.setTAlarm(newBoiler.getTAlarm());
             oldBoiler.setLastUpdated(System.currentTimeMillis());
+            switch (oldBoiler.getId()) {
+                case 0:
+                    oldBoiler.setName("Котельная «Склады Мищенко»");
+                    break;
+                case 1:
+                    oldBoiler.setName("Котельная «Выставка Ендальцева»");
+                    break;
+                case 2:
+                    oldBoiler.setName("Котельная «ЧукотОптТорг»");
+                    break;
+                case 3:
+                    oldBoiler.setName("Котельная «ЧСБК новая»");
+                    break;
+                case 4:
+                    oldBoiler.setName("Котельная «Офис СВТ»");
+                    break;
+                case 5:
+                    oldBoiler.setName("Котельная «Общежитие на Южной»");
+                    break;
+                case 6:
+                    oldBoiler.setName("Котельная «Офис ЧСБК»");
+                    break;
+                case 7:
+                    oldBoiler.setName("Котельная «Рынок»");
+                    break;
+                case 8:
+                    oldBoiler.setName("Котельная «Макатровых»");
+                    break;
+                case 9:
+                    oldBoiler.setName("Котельная ДС «Сказка»");
+                    break;
+                case 10:
+                    oldBoiler.setName("Котельная «Полярный»");
+                    break;
+                case 11:
+                    oldBoiler.setName("Котельная «Департамент»");
+                    break;
+                case 12:
+                    oldBoiler.setName("Котельная «Офис ЧСБК квартиры»");
+                    break;
+                case 13:
+                    oldBoiler.setName("Котельная Шишкина");
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid boiler ID: " + oldBoiler.getId());
+            }
 
             if (isValueChanged) {
                 oldBoiler.setLastValueChangedTime(System.currentTimeMillis());
@@ -163,30 +210,6 @@ public class BoilersDataService {
                 .get()
                 .build();
 
-        httpClient.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                log.error("Ошибка при получении корректировок: {}", e.getMessage());
-                isUpdateInProgress2.set(false);
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                try {
-                    if (response.isSuccessful() && response.body() != null) {
-                        String jsonResponse = response.body().string();
-                        TemperatureCorrections temperatureCorrections = JsonMapper.mapJsonToCorrections(jsonResponse);
-                        corrections = temperatureCorrections;
-                    } else {
-                        log.error("Неуспешный ответ при получении корректировок: {}", response.message());
-                    }
-                } catch (Exception e) {
-                    log.error("Ошибка при обработке корректировок: {}", e.getMessage());
-                } finally {
-                    isUpdateInProgress2.set(false);
-                }
-            }
-        });
     }
 
     public void setCorrectionsTpod(String[] corrections1) {
