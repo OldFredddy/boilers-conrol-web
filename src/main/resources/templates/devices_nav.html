@@ -1,8 +1,8 @@
-<!-- src/main/resources/templates/index.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Котельные</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
@@ -14,14 +14,20 @@
     <p>Температура улицы: <span th:text="${boiler.tUlica}">N/A</span> °C</p>
     <p>Плановая температура: <span th:text="${boiler.tPlan}">N/A</span> °C</p>
     <p>Температура аварии: <span th:text="${boiler.tAlarm}">N/A</span> °C</p>
-    <!-- Форма для изменения TPlan -->
+
+    <!-- Display boiler image if available -->
+    <div th:if="${boiler.boilerIcon}">
+        <img th:src="@{${boiler.boilerIcon}}" alt="Boiler Image" style="width:100%; border-radius:5px; margin-top:15px;">
+    </div>
+
+    <!-- Form for updating TPlan -->
     <form th:action="@{/boiler/updateTPlan}" method="post">
         <input type="hidden" name="id" th:value="${boiler.id}" />
         <button type="submit" name="adjustment" value="-3">Уменьшить TPlan</button>
         <button type="submit" name="adjustment" value="3">Увеличить TPlan</button>
     </form>
 
-    <!-- Форма для изменения TAlarm -->
+    <!-- Form for updating TAlarm -->
     <form th:action="@{/boiler/updateTAlarm}" method="post">
         <input type="hidden" name="id" th:value="${boiler.id}" />
         <button type="submit" name="adjustment" value="-3">Уменьшить TAlarm</button>
