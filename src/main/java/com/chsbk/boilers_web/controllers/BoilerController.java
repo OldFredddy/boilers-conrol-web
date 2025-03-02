@@ -33,7 +33,6 @@ public class BoilerController {
                 List<Boiler> boilers = Arrays.asList(response.getBody());
                 model.addAttribute("boilers", boilers);
             } else {
-                // Обработка случая, когда данные не получены
                 model.addAttribute("boilers", createTestListOfBoilers());
             }
         } catch (Exception e) {
@@ -77,10 +76,10 @@ public class BoilerController {
         return boilers;
     }
     @PostMapping("/boiler/updateTPlan")
-    public String updateTPlan(@RequestParam Long id, @RequestParam int adjustment) {
+    public ResponseEntity<String> updateTPlan(@RequestParam Long id, @RequestParam int adjustment) {
         String[] correctTplanS = new String[14]; // Предполагаем 14 котельных
         Arrays.fill(correctTplanS, "0");
-        int index = id.intValue() - 1; // Индекс котельной в массиве
+        int index = id.intValue() ; // Индекс котельной в массиве
         correctTplanS[index] = String.valueOf(adjustment);
 
         String url = BASE_URL + "/settemperaturecorrections";
@@ -97,7 +96,7 @@ public class BoilerController {
             // Обработка ошибки отправки данных
         }
 
-        return "redirect:/";
+        return ResponseEntity.ok("Tcorrect successful");
     }
 
     @PostMapping("/boiler/updateTAlarm")

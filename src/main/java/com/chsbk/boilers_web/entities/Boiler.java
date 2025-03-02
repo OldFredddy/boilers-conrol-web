@@ -52,7 +52,7 @@ public class Boiler {
     @JsonProperty("boilerIcon")
     private String boilerIcon;
 
-    @JsonProperty("boilerIcon")
+    @JsonProperty("name")
     private String name;
     public void setIsOk(int isOk) {
         this.isOk = isOk;
