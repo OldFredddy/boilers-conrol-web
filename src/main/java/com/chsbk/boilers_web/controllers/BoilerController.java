@@ -76,7 +76,8 @@ public class BoilerController {
         return boilers;
     }
     @PostMapping("/boiler/updateTPlan")
-    public ResponseEntity<String> updateTPlan(@RequestParam Long id, @RequestParam int adjustment) {
+    @ResponseBody
+    public String updateTPlan(@RequestParam Long id, @RequestParam int adjustment) {
         String[] correctTplanS = new String[14]; // Предполагаем 14 котельных
         Arrays.fill(correctTplanS, "0");
         int index = id.intValue() ; // Индекс котельной в массиве
@@ -96,10 +97,11 @@ public class BoilerController {
             // Обработка ошибки отправки данных
         }
 
-        return ResponseEntity.ok("Tcorrect successful");
+        return "TCorrerct upated";
     }
 
     @PostMapping("/boiler/updateTAlarm")
+    @ResponseBody
     public String updateTAlarm(@RequestParam Long id, @RequestParam int adjustment) {
         String[] correctTAlarmS = new String[14];
         Arrays.fill(correctTAlarmS, "0");
@@ -120,7 +122,7 @@ public class BoilerController {
             // Обработка ошибки отправки данных
         }
 
-        return "redirect:/";
+        return "TAlarm upated";
     }
 
 }

@@ -31,27 +31,72 @@
         </tr>
         <tr>
             <th>Температура аварии</th>
-            <td><span th:id="'tAlarm-' + ${boiler.id}" th:text="${boiler.tAlarm}">N/A</span> °C</td>
+            <td>
+            <span th:id="'tAlarm-' + ${boiler.id}"
+               th:text="${#numbers.formatDecimal(boiler.tAlarm, 1, 1)}">N/A</span> °C
+            </td>
         </tr>
     </table>
 
     <!-- Форма для изменения TPlan -->
-    <form th:action="@{/boiler/updateTPlan}" method="post">
-        <input type="hidden" name="id" th:value="${boiler.id}" />
-        <button type="submit" name="adjustment" value="-3">Уменьшить TPlan</button>
-        <button type="submit" name="adjustment" value="3">Увеличить TPlan</button>
-    </form>
+    <button th:id="'minusTPlan-' + ${boiler.id}"
+            onclick="adjustTPlan([[${boiler.id}]], -3)">
+        Уменьшить TPlan
+    </button>
+    <button th:id="'plusTPlan-' + ${boiler.id}"
+            onclick="adjustTPlan([[${boiler.id}]], 3)">
+        Увеличить TPlan
+    </button>
 
-    <!-- Форма для изменения TAlarm -->
-    <form th:action="@{/boiler/updateTAlarm}" method="post">
-        <input type="hidden" name="id" th:value="${boiler.id}" />
-        <button type="submit" name="adjustment" value="-3">Уменьшить TAlarm</button>
-        <button type="submit" name="adjustment" value="3">Увеличить TAlarm</button>
-    </form>
+    <!-- Кнопки для изменения TAlarm -->
+    <button th:id="'minusTAlarm-' + ${boiler.id}"
+            onclick="adjustTAlarm([[${boiler.id}]], -3)">
+        Уменьшить TAlarm
+    </button>
+    <button th:id="'plusTAlarm-' + ${boiler.id}"
+            onclick="adjustTAlarm([[${boiler.id}]], 3)">
+        Увеличить TAlarm
+    </button>
 </div>
 
 <!-- JavaScript для обновления данных -->
 <script>
+    // Функция для изменения TPlan (AJAX)
+    function adjustTPlan(boilerId, adjustment) {
+        const formData = new FormData();
+        formData.append('id', boilerId);
+        formData.append('adjustment', adjustment);
+
+        fetch('/boiler/updateTPlan', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.text())
+            .then(result => {
+                console.log('Ответ сервера:', result);
+                // Можно вызвать updateBoilerData(), чтобы сразу подтянуть свежие данные
+                // updateBoilerData();
+            })
+            .catch(error => console.error('Ошибка при отправке:', error));
+    }
+
+    // Функция для изменения TAlarm (AJAX)
+    function adjustTAlarm(boilerId, adjustment) {
+        const formData = new FormData();
+        formData.append('id', boilerId);
+        formData.append('adjustment', adjustment);
+
+        fetch('/boiler/updateTAlarm', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.text())
+            .then(result => {
+                console.log('Ответ сервера:', result);
+                // updateBoilerData(); // аналогично, если нужно обновить UI
+            })
+            .catch(error => console.error('Ошибка при отправке:', error));
+    }
     function updateBoilerData() {
         fetch('/api/boilers')
             .then(response => response.json())
@@ -61,7 +106,7 @@
                     document.getElementById('pPod-' + boiler.id).innerText = boiler.pPod;
                     document.getElementById('tUlica-' + boiler.id).innerText = boiler.tUlica;
                     document.getElementById('tPlan-' + boiler.id).innerText = boiler.tPlan;
-                    document.getElementById('tAlarm-' + boiler.id).innerText = boiler.tAlarm;
+                    document.getElementById('tAlarm-' + boiler.id).innerText = parseFloat(boiler.tAlarm).toFixed(1);
                     // Обновите другие элементы по мере необходимости
                 });
             })
