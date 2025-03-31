@@ -54,7 +54,6 @@ public class BoilersDataService {
 
         this.httpClient = new OkHttpClient();
 
-        // Запускаем периодическое обновление данных каждые 3 секунды
         scheduler.scheduleAtFixedRate(this::fetchBoilerData, 0, 3, TimeUnit.SECONDS);
     }
 

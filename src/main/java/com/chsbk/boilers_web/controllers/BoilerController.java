@@ -78,9 +78,9 @@ public class BoilerController {
     @PostMapping("/boiler/updateTPlan")
     @ResponseBody
     public String updateTPlan(@RequestParam Long id, @RequestParam int adjustment) {
-        String[] correctTplanS = new String[14]; // Предполагаем 14 котельных
+        String[] correctTplanS = new String[14];
         Arrays.fill(correctTplanS, "0");
-        int index = id.intValue() ; // Индекс котельной в массиве
+        int index = id.intValue() ;
         correctTplanS[index] = String.valueOf(adjustment);
 
         String url = BASE_URL + "/settemperaturecorrections";
@@ -94,7 +94,7 @@ public class BoilerController {
             restTemplate.postForEntity(url, requestEntity, String.class);
         } catch (Exception e) {
             e.printStackTrace();
-            // Обработка ошибки отправки данных
+
         }
 
         return "TCorrerct upated";
@@ -105,7 +105,7 @@ public class BoilerController {
     public String updateTAlarm(@RequestParam Long id, @RequestParam int adjustment) {
         String[] correctTAlarmS = new String[14];
         Arrays.fill(correctTAlarmS, "0");
-        int index = id.intValue() - 1;
+        int index = id.intValue() ;
         correctTAlarmS[index] = String.valueOf(adjustment);
 
         String url = BASE_URL + "/setAlarmCorrections";
