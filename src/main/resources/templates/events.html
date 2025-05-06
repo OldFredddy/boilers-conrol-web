@@ -1,0 +1,168 @@
+<!-- src/main/resources/templates/events.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Журнал событий</title>
+
+    <!-- Мобильная оптимизация -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Базовые стили из существующей темы (style.css) -->
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
+
+    <!-- Небольшие доработки под журнал событий -->
+    <style>
+        /* Карточка события */
+        .event {
+            background-color: var(--color-panel);
+            padding: 16px;
+            margin: 16px auto;
+            border-radius: 12px;
+            max-width: 600px;
+            box-shadow: 0 4px 6px var(--shadow-color);
+        }
+
+        /* Заголовок карточки */
+        .event h2 {
+            color: #ffffff;
+            font-size: 1.2em;
+            margin: 0 0 12px 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Таблица с деталями события */
+        .event table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: var(--radius-base);
+            overflow: hidden;
+        }
+
+        .event th,
+        .event td {
+            text-align: left;
+            padding: 8px;
+            color: var(--color-subtext);
+            vertical-align: top;
+        }
+
+        .event tr:nth-child(even) {
+            background-color: var(--color-hover-panel);
+        }
+
+        .event tr:nth-child(odd) {
+            background-color: #242424;
+        }
+
+        /* Красивый вывод JSON */
+        pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-break: break-word;
+            font-family: "Consolas", "Courier New", monospace;
+            font-size: 0.9em;
+            color: var(--color-foreground);
+        }
+
+        /* Мобильные коррекции */
+        @media (max-width: 480px) {
+            .event {
+                margin: 12px;
+                padding: 12px;
+            }
+            .event h2 {
+                font-size: 1em;
+            }
+            .event th,
+            .event td {
+                padding: 6px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<h1>Журнал событий</h1>
+
+<!-- Контейнер для всех событий -->
+<div id="eventsContainer">
+    <!-- Прогрессивный SSR‑рендер с Thymeleaf -->
+    <div th:each="event : ${events}"
+         class="event"
+         th:id="'event-' + ${event.id}">
+
+        <!-- Заголовок: время + тип события -->
+        <h2>
+            <span th:text="${#dates.format(event.ts, 'dd.MM.yyyy HH:mm:ss')}">01.01.1970 00:00:00</span>
+            &nbsp;&ndash;&nbsp;
+            <span th:text="${event.evtType}">TYPE</span>
+        </h2>
+
+        <!-- Таблица с деталями -->
+        <table>
+            <tr>
+                <th>ID</th>
+                <td th:text="${event.id}">1</td>
+            </tr>
+            <tr>
+                <th>Сессия</th>
+                <td th:text="${event.session != null ? event.session.id : '‑'}">123</td>
+            </tr>
+            <tr>
+                <th>Действие</th>
+                <td th:text="${event.action}">ACTION</td>
+            </tr>
+            <tr>
+                <th>Payload</th>
+                <td><pre th:text="${event.payload}">{}</pre></td>
+            </tr>
+            <tr>
+                <th>Статус</th>
+                <td th:text="${event.status}">0</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<!-- JavaScript для динамического обновления -->
+<script>
+    /**
+     * Запрашивает последние события через REST‑API.
+     * Ожидаемый формат ответа: массив объектов EventDTO.
+     * { id, sessionId, evtType, action, payload, status, ts }
+     */
+    function updateEvents() {
+        // Меняем URL под ваш контроллер /api/events?limit=50
+        fetch('/api/events?limit=50')
+            .then(r => r.json())
+            .then(events => {
+                const container = document.getElementById('eventsContainer');
+                container.innerHTML = '';
+
+                events.forEach(evt => {
+                    const card   = document.createElement('div');
+                    card.className = 'event';
+                    card.id        = `event-${evt.id}`;
+
+                    card.innerHTML = `
+                        <h2>${new Date(evt.ts).toLocaleString()} &ndash; ${evt.evtType}</h2>
+                        <table>
+                            <tr><th>ID</th><td>${evt.id}</td></tr>
+                            <tr><th>Сессия</th><td>${evt.sessionId ?? '‑'}</td></tr>
+                            <tr><th>Действие</th><td>${evt.action}</td></tr>
+                            <tr><th>Payload</th><td><pre>${typeof evt.payload === 'string' ? evt.payload : JSON.stringify(evt.payload, null, 2)}</pre></td></tr>
+                            <tr><th>Статус</th><td>${evt.status}</td></tr>
+                        </table>`;
+
+                    container.appendChild(card);
+                });
+            })
+            .catch(console.error);
+    }
+    setInterval(updateEvents, 100000);
+</script>
+
+</body>
+</html>

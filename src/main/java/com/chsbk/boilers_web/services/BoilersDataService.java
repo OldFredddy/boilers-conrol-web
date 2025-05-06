@@ -108,7 +108,7 @@ public class BoilersDataService {
                     oldBoiler.setName("Котельная «Выставка Ендальцева»");
                     break;
                 case 2:
-                    oldBoiler.setName("Котельная «ЧукотОптТорг»");
+                    oldBoiler.setName("Котельная «Каток»");
                     break;
                 case 3:
                     oldBoiler.setName("Котельная «ЧСБК новая»");
