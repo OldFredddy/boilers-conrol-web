@@ -75,26 +75,26 @@
 </head>
 <body>
 <div class="events-wrapper">
-    <h1>Таблица events</h1>
+    <h1>События</h1>
 
     <table class="events-table">
         <thead>
         <tr>
             <th>ID</th>
-            <th>Type</th>
-            <th>Action</th>
-            <th>Status</th>
-            <th>Timestamp</th>
+            <th>Тип</th>
+            <th>Действие</th>
+            <th>Статус</th>
+            <th>Время</th>
             <th>Payload</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="e : ${events}">
             <td data-label="ID"          th:text="${e.id}"></td>
-            <td data-label="Type"        th:text="${e.evtType}"></td>
-            <td data-label="Action"      th:text="${e.action}"></td>
-            <td data-label="Status"      th:text="${e.status}"></td>
-            <td data-label="Timestamp"
+            <td data-label="Тип"        th:text="${e.evtType}"></td>
+            <td data-label="Действие"      th:text="${e.action}"></td>
+            <td data-label="Статус"      th:text="${e.status}"></td>
+            <td data-label="Время"
                 th:text="${#temporals.format(e.ts, 'yyyy-MM-dd HH:mm:ss')}"></td>
 
             <!-- JSON‑ошибка -->

@@ -1,18 +1,25 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    background: #121212;
+}
 
-.login-container {
+body {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
-    max-width: 400px;
+    padding: 15px; /* минимальный отступ на мобильных */
+    box-sizing: border-box;
+}
+
+.login-container {
+    width: 100%;             /* Всегда занимает доступную ширину */
+    max-width: 400px;        /* но не больше 400px на десктопе */
     padding: 20px;
     background-color: #2e2e2e;
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
-
-.login-form {
-    width: 100%;
+    box-sizing: border-box;
 }
 
 .login-form h2 {
@@ -23,7 +30,6 @@
 
 .input-group {
     margin-bottom: 15px;
-
 }
 
 .input-group label {
@@ -40,6 +46,7 @@
     border-radius: 5px;
     background-color: #3e3e3e;
     color: #ffffff;
+    box-sizing: border-box;
 }
 
 .input-group button {

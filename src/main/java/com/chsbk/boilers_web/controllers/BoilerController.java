@@ -17,8 +17,8 @@ import java.util.List;
 @Controller
 public class BoilerController {
 
-    private static final String IP = "95.142.45.133"; // Замените на нужный IP
-    private static final String PORT = "23873"; // Замените на нужный порт
+    private static final String IP = "95.142.45.133";
+    private static final String PORT = "23873";
     private static final String BASE_URL = "http://" + IP + ":" + PORT;
 
     @Autowired

@@ -7,6 +7,11 @@
     <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
+<nav class="navbar">
+    <a href="#"            class="nav-btn">Пустая 1</a>
+    <a href="#"            class="nav-btn">Пустая 2</a>
+    <a th:href="@{/events}" class="nav-btn">Просмотр событий</a>
+</nav>
 <h1>Панель управления котельными</h1>
 <div th:each="boiler : ${boilers}" class="boiler" th:id="'boiler-' + ${boiler.id}">
     <h2 th:text="${boiler.name}">Название котельной</h2>
