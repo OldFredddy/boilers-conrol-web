@@ -14,7 +14,7 @@ public class EventService {
     private final EventRepository repo;
 
     public Page<Event> getPage(int page, int size) {
-        // cамые свежие события первыми
+
         return repo.findAll(
                 PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "ts"))
         );

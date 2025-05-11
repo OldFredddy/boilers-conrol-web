@@ -46,22 +46,22 @@
     <!-- Форма для изменения TPlan -->
     <button th:id="'minusTPlan-' + ${boiler.id}"
             th:onclick="'adjustTPlan(' + ${boiler.id} + ', -3)'">
-        Уменьшить TPlan
+        -3℃
     </button>
 
     <button th:id="'plusTPlan-' + ${boiler.id}"
             th:onclick="'adjustTPlan(' + ${boiler.id} + ', 3)'">
-        Увеличить TPlan
+        +3℃
     </button>
 
     <button th:id="'minusTAlarm-' + ${boiler.id}"
             th:onclick="'adjustTAlarm(' + ${boiler.id} + ', -3)'">
-        Уменьшить TAlarm
+        -3℃ (Alarm)
     </button>
 
     <button th:id="'plusTAlarm-' + ${boiler.id}"
             th:onclick="'adjustTAlarm(' + ${boiler.id} + ', 3)'">
-        Увеличить TAlarm
+        +3℃ (Alarm)
     </button>
 </div>
 

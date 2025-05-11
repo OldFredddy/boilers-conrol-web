@@ -95,7 +95,8 @@
             <td data-label="Действие"      th:text="${e.action}"></td>
             <td data-label="Статус"      th:text="${e.status}"></td>
             <td data-label="Время"
-                th:text="${#temporals.format(e.ts, 'yyyy-MM-dd HH:mm:ss')}"></td>
+                th:text="${#temporals.format(e.ts.plusHours(9), 'yyyy-MM-dd HH:mm:ss')}"></td>
+
 
             <!-- JSON‑ошибка -->
             <td data-label="Payload"

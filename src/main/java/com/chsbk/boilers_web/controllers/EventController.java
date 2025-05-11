@@ -26,6 +26,6 @@ public class EventController {
         model.addAttribute("totalPages", eventsPage.getTotalPages());
         model.addAttribute("size", size);
 
-        return "events";          // templates/events.html
+        return "events";
     }
 }
