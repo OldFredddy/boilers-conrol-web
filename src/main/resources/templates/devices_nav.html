@@ -1,126 +1,69 @@
-<!-- src/main/resources/templates/index.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Котельные</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" th:href="@{/css/style.css}" />
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 <nav class="navbar">
-    <a href="#"            class="nav-btn">Пустая 1</a>
-    <a href="#"            class="nav-btn">Пустая 2</a>
-    <a th:href="@{/events}" class="nav-btn">Просмотр событий</a>
+    <a class="nav-btn" href="#">Пустая 1</a>
+    <a class="nav-btn" href="#">Пустая 2</a>
+    <a class="nav-btn" th:href="@{/events}">Просмотр событий</a>
 </nav>
-<h1>Панель управления котельными</h1>
-<div th:each="boiler : ${boilers}" class="boiler" th:id="'boiler-' + ${boiler.id}">
-    <h2 th:text="${boiler.name}">Название котельной</h2>
 
-    <!-- Таблица с данными -->
+<h1>Панель управления котельными</h1>
+
+<div th:each="b : ${boilers}" class="boiler" th:id="'boiler-'+${b.id}">
+    <h2 th:text="${b.name}">Имя</h2>
     <table>
-        <tr>
-            <th>Температура подачи</th>
-            <td><span th:id="'tPod-' + ${boiler.id}" th:text="${boiler.tPod}">N/A</span> °C</td>
-        </tr>
-        <tr>
-            <th>Давление подачи</th>
-            <td><span th:id="'pPod-' + ${boiler.id}" th:text="${boiler.pPod}">N/A</span> МПа</td>
-        </tr>
-        <tr>
-            <th>Температура улицы</th>
-            <td><span th:id="'tUlica-' + ${boiler.id}" th:text="${boiler.tUlica}">N/A</span> °C</td>
-        </tr>
-        <tr>
-            <th>Плановая температура</th>
-            <td><span th:id="'tPlan-' + ${boiler.id}" th:text="${boiler.tPlan}">N/A</span> °C</td>
-        </tr>
-        <tr>
-            <th>Температура аварии</th>
-            <td>
-            <span th:id="'tAlarm-' + ${boiler.id}"
-               th:text="${#numbers.formatDecimal(boiler.tAlarm, 1, 1)}">N/A</span> °C
-            </td>
-        </tr>
+        <tr><th>Tподачи</th><td><span th:id="'tPod-'+${b.id}"  th:text="${b.tPod}">0</span> °C</td></tr>
+        <tr><th>Pподачи</th><td><span th:id="'pPod-'+${b.id}"  th:text="${b.pPod}">0</span> МПа</td></tr>
+        <tr><th>Tулицы</th><td><span th:id="'tUlica-'+${b.id}"th:text="${b.tUlica}">0</span> °C</td></tr>
+        <tr><th>Tплан</th><td><span th:id="'tPlan-'+${b.id}" th:text="${b.tPlan}">0</span> °C</td></tr>
+        <tr><th>Tаварии</th><td><span th:id="'tAlarm-'+${b.id}"
+                                      th:text="${#numbers.formatDecimal(b.tAlarm,1,1)}">0</span> °C</td></tr>
     </table>
 
-    <!-- Форма для изменения TPlan -->
-    <button th:id="'minusTPlan-' + ${boiler.id}"
-            th:onclick="'adjustTPlan(' + ${boiler.id} + ', -3)'">
-        -3℃
-    </button>
-
-    <button th:id="'plusTPlan-' + ${boiler.id}"
-            th:onclick="'adjustTPlan(' + ${boiler.id} + ', 3)'">
-        +3℃
-    </button>
-
-    <button th:id="'minusTAlarm-' + ${boiler.id}"
-            th:onclick="'adjustTAlarm(' + ${boiler.id} + ', -3)'">
-        -3℃ (Alarm)
-    </button>
-
-    <button th:id="'plusTAlarm-' + ${boiler.id}"
-            th:onclick="'adjustTAlarm(' + ${boiler.id} + ', 3)'">
-        +3℃ (Alarm)
-    </button>
+    <button th:onclick="'adjustTPlan('+${b.id}+ ', -3)'">-3℃</button>
+    <button th:onclick="'adjustTPlan('+${b.id}+ ', 3)'">+3℃</button>
+    <button th:onclick="'adjustTAlarm('+${b.id}+ ', -3)'">-3℃ (Alarm)</button>
+    <button th:onclick="'adjustTAlarm('+${b.id}+ ', 3)'">+3℃ (Alarm)</button>
 </div>
 
-<!-- JavaScript для обновления данных -->
 <script>
-    // Функция для изменения TPlan (AJAX)
-    function adjustTPlan(boilerId, adjustment) {
-        const formData = new FormData();
-        formData.append('id', boilerId);
-        formData.append('adjustment', adjustment);
 
-        fetch('/boiler/updateTPlan', {
-            method: 'POST',
-            body: formData
-        })
-            .then(response => response.text())
-            .then(result => {
-                console.log('Ответ сервера:', result);
-                // Можно вызвать updateBoilerData(), чтобы сразу подтянуть свежие данные
-                // updateBoilerData();
-            })
-            .catch(error => console.error('Ошибка при отправке:', error));
+
+    function ajax(url,fd){
+        return fetch(url,{method:'POST',headers:API.authHdr(),body:fd})
+            .then(r=>{if(r.status>401){localStorage.removeItem('jwtToken');location='/login'};return r.text()});
     }
 
-    // Функция для изменения TAlarm (AJAX)
-    function adjustTAlarm(boilerId, adjustment) {
-        const formData = new FormData();
-        formData.append('id', boilerId);
-        formData.append('adjustment', adjustment);
-
-        fetch('/boiler/updateTAlarm', {
-            method: 'POST',
-            body: formData
-        })
-            .then(response => response.text())
-            .then(result => {
-                console.log('Ответ сервера:', result);
-                // updateBoilerData(); // аналогично, если нужно обновить UI
-            })
-            .catch(error => console.error('Ошибка при отправке:', error));
+    function adjustTPlan(id,delta){
+        const fd=new FormData(); fd.append('id',id); fd.append('adjustment',delta);
+        ajax('/boiler/updateTPlan',fd).then(updateBoilers);
     }
-    function updateBoilerData() {
-        fetch('/api/boilers')
-            .then(response => response.json())
-            .then(data => {
-                data.forEach(boiler => {
-                    document.getElementById('tPod-' + boiler.id).innerText = boiler.tPod;
-                    document.getElementById('pPod-' + boiler.id).innerText = boiler.pPod;
-                    document.getElementById('tUlica-' + boiler.id).innerText = boiler.tUlica;
-                    document.getElementById('tPlan-' + boiler.id).innerText = boiler.tPlan;
-                    document.getElementById('tAlarm-' + boiler.id).innerText = parseFloat(boiler.tAlarm).toFixed(1);
-                    // Обновите другие элементы по мере необходимости
+    function adjustTAlarm(id,delta){
+        const fd=new FormData(); fd.append('id',id); fd.append('adjustment',delta);
+        ajax('/boiler/updateTAlarm',fd).then(updateBoilers);
+    }
+
+    function updateBoilers(){
+        fetch('/api/boilers',{headers:API.authHdr()})
+            .then(r=>{if(r.status>401){localStorage.removeItem('jwtToken');location='/login'};return r.json();})
+            .then(list=>{
+                list.forEach(b=>{
+                    document.getElementById('tPod-'+b.id).innerText   = b.tPod;
+                    document.getElementById('pPod-'+b.id).innerText   = b.pPod;
+                    document.getElementById('tUlica-'+b.id).innerText = b.tUlica;
+                    document.getElementById('tPlan-'+b.id).innerText  = b.tPlan;
+                    document.getElementById('tAlarm-'+b.id).innerText = (+b.tAlarm).toFixed(1);
                 });
-            })
-            .catch(error => console.error('Ошибка при обновлении данных:', error));
+            });
     }
-
-    // Запускаем обновление каждые 3 секунды
-    setInterval(updateBoilerData, 3000);
+    updateBoilers();
+    setInterval(updateBoilers,3000);
 </script>
 </body>
 </html>

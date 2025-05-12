@@ -3,25 +3,33 @@ package com.chsbk.boilers_web.filters;
 import com.chsbk.boilers_web.utils.JwtTokenProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@RequiredArgsConstructor
 public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
 
-    public JwtTokenFilter(JwtTokenProvider jwtTokenProvider) {
-        this.jwtTokenProvider = jwtTokenProvider;
+    // на что не вешаем фильтр
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest req) {
+        String p = req.getRequestURI();
+        return p.equals("/login") || p.startsWith("/css/") || p.startsWith("/js/")
+                || p.startsWith("/images/") || p.startsWith("/auth/");
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest req, HttpServletResponse res, FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest req,
+                                    HttpServletResponse res,
+                                    FilterChain chain)
             throws ServletException, IOException {
 
         String token = resolveToken(req);
@@ -31,15 +39,25 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(auth);
         }
 
-        filterChain.doFilter(req, res);
+        chain.doFilter(req, res);
     }
 
     private String resolveToken(HttpServletRequest req) {
-        String bearerToken = req.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
+        // 1) Authorization: Bearer ...
+        String bearer = req.getHeader("Authorization");
+        if (bearer != null && bearer.startsWith("Bearer ")) {
+            return bearer.substring(7);
+        }
+
+        // 2) Cookie: JWT=...
+        Cookie[] cookies = req.getCookies();
+        if (cookies != null) {
+            for (Cookie c : cookies) {
+                if ("JWT".equals(c.getName())) {
+                    return c.getValue();
+                }
+            }
         }
         return null;
     }
 }
-

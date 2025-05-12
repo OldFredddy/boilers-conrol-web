@@ -1,29 +1,30 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login (JWT)</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="stylesheet" href="/css/login-styles.css">
 </head>
 <body>
 <div class="login-container">
     <div class="login-form">
-        <h2>Login</h2>
-        <form th:action="@{/login}" method="post">
-            <div class="input-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            <div class="input-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <div class="input-group">
-                <button type="submit">Login</button>
-            </div>
-        </form>
+        <h2>Вход</h2>
+        <div class="input-group">
+            <label>Username</label>
+            <input id="username" required>
+        </div>
+        <div class="input-group">
+            <label>Password</label>
+            <input id="password" type="password" required>
+        </div>
+        <div class="input-group">
+            <button onclick="login()">Login</button>
+        </div>
     </div>
 </div>
+<script>
+
+</script>
 </body>
 </html>

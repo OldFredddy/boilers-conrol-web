@@ -3,116 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <title>События</title>
-
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link th:href="@{/css/style.css}" rel="stylesheet"/>
-
-    <style>
-        .events-wrapper {
-            max-width: 1000px;
-            margin: 0 auto;
-            padding: 15px;
-        }
-        .events-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        .events-table thead {
-            background: var(--color-hover-panel);
-            position: sticky;
-            top: 0;
-        }
-        .events-table th,
-        .events-table td {
-            padding: 8px 12px;
-            white-space: nowrap;
-        }
-        .events-table tr:nth-child(even) { background: var(--color-hover-panel); }
-        .events-table tr:nth-child(odd)  { background: #242424; }
-
-        /* специально для JSON */
-        .payload-cell {
-            white-space: normal;
-            word-break: break-word;
-            font-family: monospace;
-            font-size: .9em;
-        }
-
-        /* -------- Mobile ------------- */
-        @media (max-width: 600px) {
-
-            /* убираем заголовок */
-            .events-table thead { display: none; }
-
-            /* делаем карточки */
-            .events-table,
-            .events-table tbody,
-            .events-table tr,
-            .events-table td {
-                display: block;
-                width: 100%;
-            }
-            .events-table tr {
-                margin-bottom: 15px;
-                background: var(--color-panel);
-                border-radius: 8px;
-                box-shadow: 0 2px 4px rgba(0,0,0,.3);
-            }
-            .events-table td {
-                padding: 10px;
-                white-space: normal;
-            }
-            /* подписи (label) для каждой ячейки */
-            .events-table td::before {
-                content: attr(data-label);
-                font-weight: 600;
-                display: block;
-                margin-bottom: 4px;
-                color: var(--color-subtext);
-            }
-        }
-    </style>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link th:href="@{/css/style.css}" rel="stylesheet">
 </head>
 <body>
+<script>
+    function hasJwtCookie() {
+        return document.cookie.split('; ')
+            .some(c => c.startsWith('JWT='));
+    }
+
+</script>
+
 <div class="events-wrapper">
     <h1>События</h1>
-
     <table class="events-table">
         <thead>
-        <tr>
-            <th>ID</th>
-            <th>Тип</th>
-            <th>Действие</th>
-            <th>Статус</th>
-            <th>Время</th>
-            <th>Payload</th>
-        </tr>
+        <tr><th>ID</th><th>Тип</th><th>Действие</th><th>Статус</th><th>Время</th><th>Payload</th></tr>
         </thead>
         <tbody>
-        <tr th:each="e : ${events}">
-            <td data-label="ID"          th:text="${e.id}"></td>
-            <td data-label="Тип"        th:text="${e.evtType}"></td>
-            <td data-label="Действие"      th:text="${e.action}"></td>
-            <td data-label="Статус"      th:text="${e.status}"></td>
-            <td data-label="Время"
-                th:text="${#temporals.format(e.ts.plusHours(9), 'yyyy-MM-dd HH:mm:ss')}"></td>
-
-
-            <!-- JSON‑ошибка -->
-            <td data-label="Payload"
-                class="payload-cell"
-                th:text="${e.payload}"></td>
+        <tr th:each="e:${events}">
+            <td data-label="ID"      th:text="${e.id}"></td>
+            <td data-label="Тип"     th:text="${e.evtType}"></td>
+            <td data-label="Действие"th:text="${e.action}"></td>
+            <td data-label="Статус"  th:text="${e.status}"></td>
+            <td data-label="Время"   th:text="${#temporals.format(e.ts.plusHours(9),'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td data-label="Payload" class="payload-cell" th:text="${e.payload}"></td>
         </tr>
         </tbody>
     </table>
 
-    <!-- пагинация -->
     <div style="display:flex;justify-content:center;gap:10px;margin-top:15px">
-        <a th:if="${currentPage > 0}"
-           th:href="@{|/events?page=${currentPage - 1}&size=${size}|}">« Назад</a>
-        <span th:text="${currentPage + 1} + ' / ' + ${totalPages}"></span>
-        <a th:if="${currentPage + 1 < totalPages}"
-           th:href="@{|/events?page=${currentPage + 1}&size=${size}|}">Вперёд »</a>
+        <a th:if="${currentPage>0}"
+           th:href="@{|/events?page=${currentPage-1}&size=${size}|}">« Назад</a>
+        <span th:text="${currentPage+1} + ' / ' + ${totalPages}"></span>
+        <a th:if="${currentPage+1<totalPages}"
+           th:href="@{|/events?page=${currentPage+1}&size=${size}|}">Вперёд »</a>
     </div>
 </div>
 </body>
