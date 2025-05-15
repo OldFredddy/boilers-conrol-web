@@ -11,7 +11,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "events")
 @Getter @Setter
-@Immutable              // говорим Hibernate, что сущность только для чтения
+@Immutable
 public class Event {
 
     /** В продакшне id действительно уникален, так что можно обойтись без composite key */

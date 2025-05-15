@@ -2,29 +2,44 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Login (JWT)</title>
+    <title>Login</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link rel="stylesheet" href="/css/login-styles.css">
 </head>
 <body>
 <div class="login-container">
     <div class="login-form">
-        <h2>Вход</h2>
-        <div class="input-group">
-            <label>Username</label>
-            <input id="username" required>
-        </div>
-        <div class="input-group">
-            <label>Password</label>
-            <input id="password" type="password" required>
-        </div>
-        <div class="input-group">
-            <button onclick="login()">Login</button>
-        </div>
+        <h2>Login</h2>
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="login">Логин</label>
+                <input type="text" id="login" required>
+            </div>
+            <div class="input-group">
+                <label for="password">Пароль</label>
+                <input type="password" id="password" required>
+            </div>
+            <div class="input-group">
+                <button type="submit">Войти</button>
+            </div>
+        </form>
     </div>
 </div>
 <script>
-
+    document.getElementById('loginForm').addEventListener('submit', async (e)=>{
+        e.preventDefault();
+        const body = {
+            login: document.getElementById('login').value.trim(),
+            password: document.getElementById('password').value
+        };
+        const r = await fetch('/auth/login', {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body:JSON.stringify(body)
+        });
+        if(r.ok) location.href='/dashboard';
+        else alert('Ошибка входа');
+    });
 </script>
 </body>
 </html>
