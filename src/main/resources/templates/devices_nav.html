@@ -18,11 +18,11 @@
 <div th:each="b : ${boilers}" class="boiler" th:id="'boiler-'+${b.id}">
     <h2 th:text="${b.name}">Имя</h2>
     <table>
-        <tr><th>Tподачи</th><td><span th:id="'tPod-'+${b.id}"  th:text="${b.tPod}">0</span> °C</td></tr>
-        <tr><th>Pподачи</th><td><span th:id="'pPod-'+${b.id}"  th:text="${b.pPod}">0</span> МПа</td></tr>
-        <tr><th>Tулицы</th><td><span th:id="'tUlica-'+${b.id}"th:text="${b.tUlica}">0</span> °C</td></tr>
-        <tr><th>Tплан</th><td><span th:id="'tPlan-'+${b.id}" th:text="${b.tPlan}">0</span> °C</td></tr>
-        <tr><th>Tаварии</th><td><span th:id="'tAlarm-'+${b.id}"
+        <tr><th>T подачи</th><td><span th:id="'tPod-'+${b.id}"  th:text="${b.tPod}">0</span> °C</td></tr>
+        <tr><th>P подачи</th><td><span th:id="'pPod-'+${b.id}"  th:text="${b.pPod}">0</span> МПа</td></tr>
+        <tr><th>T улицы</th><td><span th:id="'tUlica-'+${b.id}"th:text="${b.tUlica}">0</span> °C</td></tr>
+        <tr><th>T план</th><td><span th:id="'tPlan-'+${b.id}" th:text="${b.tPlan}">0</span> °C</td></tr>
+        <tr><th>T аварии</th><td><span th:id="'tAlarm-'+${b.id}"
                                       th:text="${#numbers.formatDecimal(b.tAlarm,1,1)}">0</span> °C</td></tr>
     </table>
 
@@ -34,36 +34,55 @@
 
 <script>
 
-
-    function ajax(url,fd){
-        return fetch(url,{method:'POST',headers:API.authHdr(),body:fd})
-            .then(r=>{if(r.status>401){localStorage.removeItem('jwtToken');location='/login'};return r.text()});
+    function ajax(url, fd) {
+        return fetch(url, {
+            method: 'POST',
+            body: fd,
+            credentials: 'same-origin' // cookies будут передаваться, если путь совпадает
+        }).then(r => {
+            if (r.status > 401) {
+                localStorage.removeItem('jwtToken');
+                location = '/login';
+            }
+            return r.text();
+        });
     }
 
-    function adjustTPlan(id,delta){
-        const fd=new FormData(); fd.append('id',id); fd.append('adjustment',delta);
-        ajax('/boiler/updateTPlan',fd).then(updateBoilers);
+    function adjustTPlan(id, delta) {
+        const fd = new FormData();
+        fd.append('id', id);
+        fd.append('adjustment', delta);
+        ajax('/boiler/updateTPlan', fd).then(updateBoilers);
     }
-    function adjustTAlarm(id,delta){
-        const fd=new FormData(); fd.append('id',id); fd.append('adjustment',delta);
-        ajax('/boiler/updateTAlarm',fd).then(updateBoilers);
+    function adjustTAlarm(id, delta) {
+        const fd = new FormData();
+        fd.append('id', id);
+        fd.append('adjustment', delta);
+        ajax('/boiler/updateTAlarm', fd).then(updateBoilers);
     }
 
-    function updateBoilers(){
-        fetch('/api/boilers',{headers:API.authHdr()})
-            .then(r=>{if(r.status>401){localStorage.removeItem('jwtToken');location='/login'};return r.json();})
-            .then(list=>{
-                list.forEach(b=>{
-                    document.getElementById('tPod-'+b.id).innerText   = b.tPod;
-                    document.getElementById('pPod-'+b.id).innerText   = b.pPod;
-                    document.getElementById('tUlica-'+b.id).innerText = b.tUlica;
-                    document.getElementById('tPlan-'+b.id).innerText  = b.tPlan;
-                    document.getElementById('tAlarm-'+b.id).innerText = (+b.tAlarm).toFixed(1);
+    function updateBoilers() {
+        fetch('/api/boilers', { credentials: 'same-origin' }) // для передачи cookie
+            .then(r => {
+                if (r.status > 401) {
+                    localStorage.removeItem('jwtToken');
+                    location = '/login';
+                }
+                return r.json();
+            })
+            .then(list => {
+                list.forEach(b => {
+                    document.getElementById('tPod-' + b.id).innerText = b.tPod;
+                    document.getElementById('pPod-' + b.id).innerText = b.pPod;
+                    document.getElementById('tUlica-' + b.id).innerText = b.tUlica;
+                    document.getElementById('tPlan-' + b.id).innerText = b.tPlan;
+                    document.getElementById('tAlarm-' + b.id).innerText = (+b.tAlarm).toFixed(1);
                 });
             });
     }
+
     updateBoilers();
-    setInterval(updateBoilers,3000);
+    setInterval(updateBoilers, 3000);
 </script>
 </body>
 </html>

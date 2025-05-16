@@ -3,12 +3,14 @@ package com.chsbk.boilers_web.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
 @Component
+@Slf4j
 public class JwtUtil {
 
     @Value("${jwt.secret}")     private String secret;
@@ -25,6 +27,7 @@ public class JwtUtil {
     }
 
     public Long getUserId(String token) {
+
         Claims body = Jwts.parser()
                 .setSigningKey(secret)
                 .parseClaimsJws(token)

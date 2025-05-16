@@ -5,21 +5,107 @@
     <title>События</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <link th:href="@{/css/style.css}" rel="stylesheet">
+    <style>
+        /* ДОБАВЛЯЕМ ФИЛЬТР И АДАПТИВНОСТЬ */
+        .filter-row {
+            display: flex;
+            justify-content: center;
+            margin: 16px 0 8px 0;
+        }
+        .filter-row input {
+            width: 100%;
+            max-width: 350px;
+            padding: 10px 16px;
+            font-size: 1em;
+            background: var(--color-panel);
+            color: var(--color-foreground);
+            border: 1.5px solid var(--color-highlight);
+            border-radius: var(--radius-base);
+            outline: none;
+            transition: border 0.2s;
+        }
+        .filter-row input:focus {
+            border-color: var(--color-active);
+        }
+        @media (max-width: 480px) {
+            .filter-row input {
+                font-size: 0.95em;
+                padding: 8px 12px;
+            }
+        }
+        /* АДАПТИВНАЯ ТАБЛИЦА */
+        .events-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--color-panel);
+            border-radius: var(--radius-base);
+            overflow: hidden;
+            box-shadow: 0 4px 6px var(--shadow-color);
+            margin-bottom: 20px;
+        }
+        .events-table th, .events-table td {
+            padding: 10px 8px;
+            text-align: left;
+            color: var(--color-subtext);
+        }
+        .events-table thead {
+            background: #232323;
+        }
+        .events-table tr:nth-child(even) { background: #191919; }
+        .events-table tr:nth-child(odd) { background: #242424; }
+        .events-table td.payload-cell {
+            word-break: break-word;
+            max-width: 220px;
+        }
+        @media (max-width: 900px) {
+            .events-table td.payload-cell { max-width: 90px; }
+        }
+        /* Мобильная таблица: отображаем как карточки */
+        @media (max-width: 600px) {
+            .events-table, .events-table thead, .events-table tbody, .events-table tr, .events-table th, .events-table td {
+                display: block;
+                width: 100%;
+            }
+            .events-table thead tr {
+                display: none;
+            }
+            .events-table tr {
+                margin-bottom: 18px;
+                background: var(--color-panel);
+                box-shadow: 0 2px 4px var(--shadow-color);
+                border-radius: 10px;
+                padding: 8px 0;
+            }
+            .events-table td {
+                padding: 8px 12px;
+                border: none;
+                color: var(--color-foreground);
+                position: relative;
+            }
+            .events-table td:before {
+                content: attr(data-label) ": ";
+                font-weight: bold;
+                color: var(--color-highlight);
+                display: block;
+                margin-bottom: 4px;
+                font-size: 0.98em;
+            }
+        }
+    </style>
 </head>
 <body>
-<script>
-    function hasJwtCookie() {
-        return document.cookie.split('; ')
-            .some(c => c.startsWith('JWT='));
-    }
-
-</script>
-
 <div class="events-wrapper">
     <h1>События</h1>
-    <table class="events-table">
+    <!-- ФИЛЬТР -->
+    <div class="filter-row">
+        <input id="eventFilter" type="text" placeholder="Поиск по событиям..." oninput="filterEvents()">
+    </div>
+    <!-- ТАБЛИЦА -->
+    <table class="events-table" id="eventsTable">
         <thead>
-        <tr><th>ID</th><th>Тип</th><th>Действие</th><th>Статус</th><th>Время</th><th>Payload</th></tr>
+        <tr>
+            <th>ID</th><th>Тип</th><th>Действие</th><th>Статус</th><th>Время</th><th>Payload</th>
+        </tr>
         </thead>
         <tbody>
         <tr th:each="e:${events}">
@@ -32,14 +118,24 @@
         </tr>
         </tbody>
     </table>
-
     <div style="display:flex;justify-content:center;gap:10px;margin-top:15px">
-        <a th:if="${currentPage>0}"
-           th:href="@{|/events?page=${currentPage-1}&size=${size}|}">« Назад</a>
+        <a th:if="${currentPage>0}" th:href="@{|/events?page=${currentPage-1}&size=${size}|}">« Назад</a>
         <span th:text="${currentPage+1} + ' / ' + ${totalPages}"></span>
-        <a th:if="${currentPage+1<totalPages}"
-           th:href="@{|/events?page=${currentPage+1}&size=${size}|}">Вперёд »</a>
+        <a th:if="${currentPage+1<totalPages}" th:href="@{|/events?page=${currentPage+1}&size=${size}|}">Вперёд »</a>
     </div>
 </div>
+<script>
+    function filterEvents() {
+        const filter = document.getElementById('eventFilter').value.trim().toLowerCase();
+        const table = document.getElementById('eventsTable');
+        const trs = table.querySelectorAll('tbody tr');
+        trs.forEach(tr => {
+            const match = Array.from(tr.children).some(td =>
+                td.textContent.toLowerCase().includes(filter)
+            );
+            tr.style.display = match ? '' : 'none';
+        });
+    }
+</script>
 </body>
 </html>

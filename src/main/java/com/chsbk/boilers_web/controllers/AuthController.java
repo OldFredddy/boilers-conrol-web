@@ -25,7 +25,7 @@ public class AuthController {
     private static final String AUTH_COOKIE = "AuthToken";
 
     private final JwtUtil jwtUtil;
-    private final BCryptPasswordEncoder   passwordEncoder;
+    private final BCryptPasswordEncoder   passwordEncoder = new BCryptPasswordEncoder();
 
     record LoginRq(@NotBlank String login,
                    @NotBlank String password) { }
@@ -38,6 +38,7 @@ public class AuthController {
         if (!(rq.login.equals("admin") && rq.password.equals("178562198"))) {
             throw new IllegalArgumentException("bad credentials");
         }
+
         String token = jwtUtil.generateToken(100L);
 
         ResponseCookie cookie = ResponseCookie
@@ -71,32 +72,7 @@ public class AuthController {
                 .build();
     }
 
-    private User findByLogin(String login) {
 
-        Optional<User> byEmail = userRepo.findByEmails_Email(login);
-        if (byEmail.isPresent()) {
-            return byEmail.get();
-        }
-
-        Optional<User> byPhone = userRepo.findByPhones_Phone(login);
-        if (byPhone.isPresent()) {
-            return byPhone.get();
-        }
-
-        log.warn("Auth failed  | login='{}' reason=user_not_found", login);
-        throw new IllegalArgumentException("user not found");
-    }
-
-    private void checkPassword(User user, String rawPassword) {
-
-        boolean matches = passwordEncoder.matches(rawPassword, user.getPassword());
-        if (!matches) {
-            log.warn("Auth failed  | login='{}' userId={} reason=bad_credentials",
-                    user.getEmails(),
-                    user.getId());
-            throw new IllegalArgumentException("bad credentials");
-        }
-    }
 
     private Optional<Long> safeUserId(String token) {
 
